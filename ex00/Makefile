@@ -6,7 +6,7 @@
 #    By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/25 21:52:00 by hshimizu          #+#    #+#              #
-#    Updated: 2024/08/25 22:11:24 by hshimizu         ###   ########.fr        #
+#    Updated: 2024/08/27 06:11:16 by hshimizu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		:= btc
 
 CXX			:= c++
 CXXFLAGS	:= -Wall -Wextra -Werror
-CXXFLAGS	+= -std=c++98 -g
+CXXFLAGS	+= -std=c++98
 
 SRCS		:= main.cpp
 SRCS		+= BitcoinExchange.cpp
