@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:12:44 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/03 23:21:57 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/03 23:22:45 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,9 @@ int main(int argc, char **argv) {
   std::size_t size = argc - 1;
   int *data = new int[size];
   try {
-    for (std::size_t i = 0; i < size; i++) {
-      data[i] = ft_stoi(argv[i + 1]);
-      if (data[i] < 0)
+    for (std::size_t i = 0; i < size; i++)
+      if ((data[i] = ft_stoi(argv[i + 1])) < 0)
         throw std::runtime_error("Invalid argument");
-    }
     PmergeMe(data, size);
   } catch (const std::exception &e) {
     std::cerr << "Error" << std::endl;
