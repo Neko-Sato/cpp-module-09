@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:54:49 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/03 23:15:23 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/04 17:40:19 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void PmergeMe(int *data, std::size_t size) {
   std::cout << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::vector : " << v1_end - v1_start << " us"
-            << std::endl;
-  std::cout << "Time to process a range of " << std::setw(3)
+            << std::endl
+            << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::list : " << v2_end - v2_start << " us"
             << std::endl;
@@ -47,21 +47,20 @@ void PmergeMe(int *data, std::size_t size) {
 
 //	sort std::vector
 
-// data[i - k]とdata[i]を前方k個にわたって入れ替える
-void blockSwap(std::vector<int> &data, std::size_t a, std::size_t b,
-               std::size_t n) {
-  for (std::size_t i = 0; i < n; i++)
-    std::swap(data[a - i], data[b - i]);
-}
-
 void sort(std::vector<int> &data) {
-  std::size_t k = 1;
-  for (; k * 2 < data.size(); k *= 2)
+  std::size_t k;
+  for (k = 1; k * 2 < data.size(); k *= 2)
     for (std::size_t i = 2 * k - 1; i < data.size(); i += 2 * k)
       if (data[i] < data[i - k])
-        blockSwap(data, i, i - k, k);
-  k /= 2;
-  std::cout << k << std::endl;
+        std::swap_ranges(data.begin() + (i - k + 1), data.begin() + (i + 1),
+                         data.begin() + (i - k - k + 1));
+  for (k /= 2; 1 < k; k /= 2) {
+    for (std::size_t i = 1; i < data.size(); i += 2 * k)
+      if (data[i] < data[i - k]) {
+
+        
+      }
+  }
 }
 
 //	sort std::list
