@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:54:49 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/04 17:40:19 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/08 04:23:37 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,16 @@ void sort(std::vector<int> &data) {
   for (k /= 2; 1 < k; k /= 2) {
     for (std::size_t i = 1; i < data.size(); i += 2 * k)
       if (data[i] < data[i - k]) {
-
-        
       }
   }
 }
+/*
+y1 x1 x2 x3 x4 x5 x6 x7 x8 x9
+      y2 y3 y4 y5 y6 y7 y8 y9
+      2  2  3  3  3
+*/
+
 
 //	sort std::list
+
+
