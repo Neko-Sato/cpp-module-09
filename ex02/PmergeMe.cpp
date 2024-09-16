@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:54:49 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/08 04:23:37 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/16 23:12:29 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@
 #include <iostream>
 #include <sys/time.h>
 
-unsigned long getTime() {
-  timeval t;
-  gettimeofday(&t, NULL);
-  return t.tv_sec * 1000000 + t.tv_usec;
-}
+template <typename T> static void sort(std::vector<T> &data);
+template <typename T> static void sort(std::list<T> &data);
 
 void PmergeMe(int *data, std::size_t size) {
   std::vector<int> v1(data, data + size);
@@ -28,7 +25,7 @@ void PmergeMe(int *data, std::size_t size) {
   std::cout << "Before:\t";
   printData(v1);
   unsigned long v1_start = getTime();
-  sort(v1);
+  //   sort(v1);
   unsigned long v1_end = getTime();
   unsigned long v2_start = getTime();
   //   sort(v2);
@@ -45,28 +42,26 @@ void PmergeMe(int *data, std::size_t size) {
             << std::endl;
 }
 
-//	sort std::vector
-
-void sort(std::vector<int> &data) {
-  std::size_t k;
-  for (k = 1; k * 2 < data.size(); k *= 2)
-    for (std::size_t i = 2 * k - 1; i < data.size(); i += 2 * k)
-      if (data[i] < data[i - k])
-        std::swap_ranges(data.begin() + (i - k + 1), data.begin() + (i + 1),
-                         data.begin() + (i - k - k + 1));
-  for (k /= 2; 1 < k; k /= 2) {
-    for (std::size_t i = 1; i < data.size(); i += 2 * k)
-      if (data[i] < data[i - k]) {
-      }
-  }
+unsigned long getTime() {
+  timeval t;
+  gettimeofday(&t, NULL);
+  return t.tv_sec * 1000000 + t.tv_usec;
 }
-/*
-y1 x1 x2 x3 x4 x5 x6 x7 x8 x9
-      y2 y3 y4 y5 y6 y7 y8 y9
-      2  2  3  3  3
-*/
 
-
-//	sort std::list
-
-
+unsigned long jacobsthal(unsigned long i) {
+  static std::vector<unsigned long> buf;
+  for (std::size_t k; (k = buf.size()) <= i;) {
+    if (k == 0)
+      buf.push_back(0);
+    else if (k == 1)
+      buf.push_back(1);
+    else {
+      unsigned long tmp;
+      if (__builtin_mul_overflow(2, buf[k - 2], &tmp) ||
+          __builtin_add_overflow(tmp, buf[k - 1], &tmp))
+        throw std::overflow_error("jacobsthal");
+      buf.push_back(tmp);
+    }
+  }
+  return buf[i];
+}
