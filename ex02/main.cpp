@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:12:44 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/30 00:35:55 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/30 00:42:48 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,14 @@ int main(int argc, char **argv) {
   return 0;
 }
 
+/*
+	Again, “Better test...” I think I hear a voice saying,
+	If we conform to SUBJECT, can't we test on the second container?
+	Huh?
+	Anyway, I've written the test code in python.
+	I'll test around with it, that should do it, right?
+	You can ask me anything you want, gauge my understanding!
+*/
 /*
 import random
 import subprocess
