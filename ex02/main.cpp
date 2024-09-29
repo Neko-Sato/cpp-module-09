@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:12:44 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/03 23:22:45 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/30 00:35:55 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int ft_stoi(char *str) {
   char *endptr;
   errno = 0;
   long i = std::strtol(str, &endptr, 10);
-  if (errno || *endptr || std::numeric_limits<int>::max() < i ||
+  if (errno || endptr == str || *endptr ||
+      std::numeric_limits<int>::max() < i ||
       std::numeric_limits<int>::min() > i)
     throw std::runtime_error("strtol");
   return i;
@@ -41,3 +42,34 @@ int main(int argc, char **argv) {
   delete[] data;
   return 0;
 }
+
+/*
+import random
+import subprocess
+import sys
+
+def test():
+	for i in range(1, 1000):
+		for j in range(1, 5):
+			numbers = random.sample(range(0, (1 << 31) -1), i)
+			sys.stdout.write(f"{i} item {j} time: ")
+			sys.stdout.flush()
+			sorted_numbers = sorted(numbers)
+			result = subprocess.run(
+				['./PmergeMe'] + [str(i) for i in numbers] ,
+				stdout=subprocess.PIPE,
+				stderr=subprocess.PIPE,
+			)
+			after_str = result.stdout.decode("ascii").split("\n")[1][7:]
+			after = [int(i) for i in after_str.split(" ")]
+			if after == sorted_numbers:
+				sys.stdout.write("OK")
+			else:
+				sys.stdout.write("NG")
+				return False
+			sys.stdout.write("\n")
+	return True
+
+if __name__ == '__main__':
+	test()
+*/

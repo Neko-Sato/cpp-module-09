@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:54:49 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/29 23:01:48 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/29 23:40:56 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,29 @@ struct Node {
     Pair() : large(NULL), small(NULL) {};
     Pair(Node const &large, Node const &small)
         : large(&large), small(&small) {};
+    ~Pair() {};
+    Pair(Pair const &other) : large(other.large), small(other.small) {};
+    Pair &operator=(Pair const &other) {
+      if (this != &other) {
+        large = other.large;
+        small = other.small;
+      }
+      return *this;
+    };
   };
   Pair pair;
   int number;
-  Node(int number) : number(number) {};
+  Node(int number = 0) : number(number) {};
   Node(Node const &large, Node const &small) : pair(large, small) {};
+  Node(Node const &other) : pair(other.pair), number(other.number) {};
+  ~Node() {};
+  Node &operator=(Node const &other) {
+    if (this != &other) {
+      pair = other.pair;
+      number = other.number;
+    }
+    return *this;
+  };
   int getTypical() const {
     if (pair.large)
       return pair.large->getTypical();
@@ -51,20 +69,17 @@ static void sort(std::vector<Node> &data);
 static void sort(std::list<Node> &data);
 
 void PmergeMe(int *data, std::size_t size) {
-  std::vector<Node> v0;
-  for (std::size_t i = 0; i < size; i++)
-    v0.push_back(data[i]);
-  std::vector<Node> v1(v0.begin(), v0.end());
-  std::list<Node> v2(v0.begin(), v0.end());
   unsigned long start = getTime();
+  std::vector<Node> v1(data, data + size);
   sort(v1);
   unsigned long middle = getTime();
+  std::list<Node> v2(data, data + size);
   sort(v2);
   unsigned long end = getTime();
   std::cout << "Before:\t";
-  printData(v0);
+  printData(data, data + size);
   std::cout << "After:\t";
-  printData(v1);
+  printData(v1.begin(), v1.end());
   std::cout << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::vector : " << middle - start << " us"

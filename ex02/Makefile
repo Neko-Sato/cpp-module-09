@@ -6,7 +6,7 @@
 #    By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/25 21:52:00 by hshimizu          #+#    #+#              #
-#    Updated: 2024/09/03 22:21:23 by hshimizu         ###   ########.fr        #
+#    Updated: 2024/09/30 00:36:14 by hshimizu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		:= PmergeMe
 
 CXX			:= c++
 CXXFLAGS	:= -Wall -Wextra -Werror
-CXXFLAGS	+= -std=c++98 -g
+CXXFLAGS	+= -std=c++98
 
 SRCS		:= main.cpp
 SRCS		+= PmergeMe.cpp
