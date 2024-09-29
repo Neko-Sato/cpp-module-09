@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:54:49 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/29 23:40:56 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/09/30 00:38:21 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ struct Node {
   Pair pair;
   int number;
   Node(int number = 0) : number(number) {};
-  Node(Node const &large, Node const &small) : pair(large, small) {};
+  Node(Node const &large, Node const &small) : pair(large, small), number(0) {};
   Node(Node const &other) : pair(other.pair), number(other.number) {};
   ~Node() {};
   Node &operator=(Node const &other) {
