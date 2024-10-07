@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 21:51:38 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/08/27 04:51:18 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:44:57 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int main(int argc, char *argv[]) {
   try {
     BitcoinExchange btc;
     btc.read(1 < argc ? argv[1] : "");
+    return EXIT_SUCCESS;
   } catch (std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
-  return 0;
 }

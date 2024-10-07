@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:12:44 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 17:59:56 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:44:55 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,18 @@ int ft_stoi(char *str) {
 }
 
 int main(int argc, char **argv) {
-  std::size_t size = argc - 1;
-  int *data = new int[size];
   try {
+    std::size_t size = argc - 1;
+    int data[size];
     for (std::size_t i = 0; i < size; i++)
       if ((data[i] = ft_stoi(argv[i + 1])) < 0)
         throw std::runtime_error("Invalid argument");
     PmergeMe(data, size);
+    return EXIT_SUCCESS;
   } catch (const std::exception &e) {
     std::cerr << "Error" << std::endl;
+    return EXIT_FAILURE;
   }
-  delete[] data;
-  return 0;
 }
 
 /*

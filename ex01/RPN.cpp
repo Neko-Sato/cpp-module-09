@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 04:52:53 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/08/27 06:08:20 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:42:32 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,30 +46,33 @@ long ft_stol(const std::string &str) {
   return ret;
 }
 
-#define CALCULATE(op)                                                          \
+#define CALCULATE(s, op)                                                       \
   do {                                                                         \
-    long a = stack.top();                                                      \
-    stack.pop();                                                               \
-    long b = stack.top();                                                      \
-    stack.pop();                                                               \
-    stack.push(b op a);                                                        \
+    if (s.empty())                                                             \
+      throw std::invalid_argument("invalid argument");                         \
+    long a = s.top();                                                          \
+    s.pop();                                                                   \
+    if (s.empty())                                                             \
+      throw std::invalid_argument("invalid argument");                         \
+    long b = s.top();                                                          \
+    s.pop();                                                                   \
+    s.push(b op a);                                                            \
   } while (0);
 
 long rpn(std::istream &in) {
   std::stack<long> stack;
   std::string tmp;
   while (getToken(in, tmp)) {
-    if (tmp == "+") {
-      CALCULATE(+)
-    } else if (tmp == "-") {
-      CALCULATE(-)
-    } else if (tmp == "*") {
-      CALCULATE(*)
-    } else if (tmp == "/") {
-      CALCULATE(/)
-    } else {
+    if (tmp == "+")
+      CALCULATE(stack, +)
+    else if (tmp == "-")
+      CALCULATE(stack, -)
+    else if (tmp == "*")
+      CALCULATE(stack, *)
+    else if (tmp == "/")
+      CALCULATE(stack, /)
+    else
       stack.push(ft_stol(tmp));
-    }
   }
   if (stack.size() != 1)
     throw std::invalid_argument("invalid argument");

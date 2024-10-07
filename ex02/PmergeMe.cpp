@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 17:59:27 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 21:19:06 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ void PmergeMe(int *data, std::size_t size) {
   printData(data, data + size);
   std::cout << "After:\t";
   printData(v1.begin(), v1.end());
-  std::cout << "After:\t";
-  printData(v2.begin(), v2.end());
   std::cout << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::vector : " << middle - start << " us"
