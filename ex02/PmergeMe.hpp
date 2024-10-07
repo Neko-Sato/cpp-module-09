@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 22:15:54 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 15:13:35 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:38:16 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 #include <list>
 #include <vector>
 
-void PmergeMe(int *data, std::size_t size);
 unsigned long getTime();
 unsigned long jacobsthal(unsigned long);
+
+void PmergeMe(int *data, std::size_t size);
 
 template <typename T> class Node {
 private:

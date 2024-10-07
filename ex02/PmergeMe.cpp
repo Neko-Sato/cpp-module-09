@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 15:19:39 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:38:04 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,30 @@
 #include <list>
 #include <sys/time.h>
 #include <vector>
+
+unsigned long getTime() {
+  timeval t;
+  gettimeofday(&t, NULL);
+  return t.tv_sec * 1000000 + t.tv_usec;
+}
+
+unsigned long jacobsthal(unsigned long i) {
+  static std::vector<unsigned long> buf;
+  for (std::size_t k; (k = buf.size()) <= i;) {
+    if (k == 0)
+      buf.push_back(0);
+    else if (k == 1)
+      buf.push_back(1);
+    else {
+      unsigned long tmp;
+      if (__builtin_mul_overflow(2, buf[k - 2], &tmp) ||
+          __builtin_add_overflow(tmp, buf[k - 1], &tmp))
+        throw std::overflow_error("jacobsthal");
+      buf.push_back(tmp);
+    }
+  }
+  return buf[i];
+}
 
 template <typename T> void sort(std::vector<T> &data);
 template <typename T> void sort(std::list<T> &data);
@@ -43,30 +67,6 @@ void PmergeMe(int *data, std::size_t size) {
             << std::setfill(' ') << size
             << " elements with std::list : " << end - middle << " us"
             << std::endl;
-}
-
-unsigned long getTime() {
-  timeval t;
-  gettimeofday(&t, NULL);
-  return t.tv_sec * 1000000 + t.tv_usec;
-}
-
-unsigned long jacobsthal(unsigned long i) {
-  static std::vector<unsigned long> buf;
-  for (std::size_t k; (k = buf.size()) <= i;) {
-    if (k == 0)
-      buf.push_back(0);
-    else if (k == 1)
-      buf.push_back(1);
-    else {
-      unsigned long tmp;
-      if (__builtin_mul_overflow(2, buf[k - 2], &tmp) ||
-          __builtin_add_overflow(tmp, buf[k - 1], &tmp))
-        throw std::overflow_error("jacobsthal");
-      buf.push_back(tmp);
-    }
-  }
-  return buf[i];
 }
 
 template <typename T> void sort(std::vector<T> &data) {
