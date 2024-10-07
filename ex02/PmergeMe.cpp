@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 06:54:49 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/30 00:38:21 by hshimizu         ###   ########.fr       */
+/*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
+/*   Updated: 2024/10/07 15:19:39 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,68 +18,23 @@
 #include <sys/time.h>
 #include <vector>
 
-struct Node {
-  struct Pair {
-    Node const *large;
-    Node const *small;
-    Pair() : large(NULL), small(NULL) {};
-    Pair(Node const &large, Node const &small)
-        : large(&large), small(&small) {};
-    ~Pair() {};
-    Pair(Pair const &other) : large(other.large), small(other.small) {};
-    Pair &operator=(Pair const &other) {
-      if (this != &other) {
-        large = other.large;
-        small = other.small;
-      }
-      return *this;
-    };
-  };
-  Pair pair;
-  int number;
-  Node(int number = 0) : number(number) {};
-  Node(Node const &large, Node const &small) : pair(large, small), number(0) {};
-  Node(Node const &other) : pair(other.pair), number(other.number) {};
-  ~Node() {};
-  Node &operator=(Node const &other) {
-    if (this != &other) {
-      pair = other.pair;
-      number = other.number;
-    }
-    return *this;
-  };
-  int getTypical() const {
-    if (pair.large)
-      return pair.large->getTypical();
-    return number;
-  }
-  bool operator<(Node const other) const {
-    return getTypical() < other.getTypical();
-  }
-};
-
-std::ostream &operator<<(std::ostream &out, Node const node) {
-  if (node.pair.large)
-    return out << "<" << *node.pair.large << " " << *node.pair.small << ">";
-  else
-    return out << node.number;
-}
-
-static void sort(std::vector<Node> &data);
-static void sort(std::list<Node> &data);
+template <typename T> void sort(std::vector<T> &data);
+template <typename T> void sort(std::list<T> &data);
 
 void PmergeMe(int *data, std::size_t size) {
   unsigned long start = getTime();
-  std::vector<Node> v1(data, data + size);
+  std::vector<int> v1(data, data + size);
   sort(v1);
   unsigned long middle = getTime();
-  std::list<Node> v2(data, data + size);
+  std::list<int> v2(data, data + size);
   sort(v2);
   unsigned long end = getTime();
   std::cout << "Before:\t";
   printData(data, data + size);
   std::cout << "After:\t";
   printData(v1.begin(), v1.end());
+  std::cout << "After:\t";
+  printData(v2.begin(), v2.end());
   std::cout << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::vector : " << middle - start << " us"
@@ -114,66 +69,115 @@ unsigned long jacobsthal(unsigned long i) {
   return buf[i];
 }
 
-static void sort(std::vector<Node> &data) {
+template <typename T> void sort(std::vector<T> &data) {
   if (data.size() < 2)
     return;
-  std::vector<Node> pairs;
-  for (std::size_t i = 1; i < data.size(); i += 2)
-    if (data[i] < data[i - 1])
-      pairs.push_back(Node(data[i - 1], data[i]));
-    else
-      pairs.push_back(Node(data[i], data[i - 1]));
-  sort(pairs);
-  std::vector<Node> res, tmp;
-  for (std::size_t n = 2, i = 0; i < pairs.size(); n++) {
-    for (std::size_t j = jacobsthal(n); 0 < j && i < pairs.size(); j--, i++) {
-      res.push_back(*pairs[i].pair.large);
-      tmp.push_back(*pairs[i].pair.small);
+  typedef typename TypeSelector<T>::type Type;
+  std::vector<Node<Type> > large, small;
+  large.reserve(data.size() / 2);
+  small.reserve(data.size() / 2 + data.size() % 2);
+  for (typename std::vector<T>::iterator it = data.begin(); it != data.end();
+       ++it) {
+    typename std::vector<T>::iterator pre = it++;
+    if (it == data.end()) {
+      small.push_back(&*pre);
+      break;
     }
-    while (!tmp.empty()) {
-      Node &n = tmp.back();
-      res.insert(std::lower_bound(res.begin(), res.end(), n), n);
-      tmp.pop_back();
+    bool isLess = *pre < *it;
+    large.push_back(isLess ? &*it : &*pre);
+    small.push_back(isLess ? &*pre : &*it);
+    large.back().push(&small.back());
+  }
+  sort(large);
+  std::vector<Node<Type> > tmp;
+  tmp.reserve(data.size());
+  {
+    typename std::vector<Node<Type> >::iterator it = large.begin();
+    {
+      tmp.push_back(*it->pop());
+      tmp.push_back(*it);
+      ++it;
+    }
+    for (std::size_t n = 2; it != large.end(); n++) {
+      for (std::size_t j = jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
+        tmp.push_back(*it);
+      for (typename std::vector<Node<Type> >::reverse_iterator jt = tmp.rbegin();
+           jt != tmp.rend();) {
+        if (jt->hasPair()) {
+          Node<Type> &node = *jt->pop();
+          ++jt;
+          tmp.insert(std::lower_bound(tmp.begin(), jt.base(), node), node);
+          --jt;
+        } else
+          ++jt;
+      }
+    }
+    if (data.size() % 2) {
+      Node<Type> &node = small.back();
+      tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
     }
   }
-  if (data.size() % 2) {
-    Node &n = data.back();
-    res.insert(std::lower_bound(res.begin(), res.end(), n), n);
+  std::vector<T> res;
+  res.reserve(data.size());
+  for (typename std::vector<Node<Type> >::iterator it = tmp.begin();
+       it != tmp.end(); ++it) {
+    T *value;
+    it->getValue(value);
+    res.push_back(*value);
   }
-  data = res;
+  data.swap(res);
 }
 
-static void sort(std::list<Node> &data) {
+template <typename T> void sort(std::list<T> &data) {
   if (data.size() < 2)
     return;
-  std::list<Node> pairs;
-  for (std::list<Node>::iterator it = data.begin(); it != data.end(); ++it) {
-    std::list<Node>::iterator pre = it++;
-    if (it == data.end())
+  typedef typename TypeSelector<T>::type Type;
+  std::list<Node<Type> > large, small;
+  for (typename std::list<T>::iterator it = data.begin(); it != data.end();
+       ++it) {
+    typename std::list<T>::iterator pre = it++;
+    if (it == data.end()) {
+      small.push_back(&*pre);
       break;
-    if (*it < *pre)
-      pairs.push_back(Node(*pre, *it));
-    else
-      pairs.push_back(Node(*it, *pre));
-  }
-  sort(pairs);
-  std::list<Node> res, tmp;
-  for (std::size_t n = 2; !pairs.empty(); n++) {
-    for (std::size_t j = jacobsthal(n); 0 < j && !pairs.empty(); j--) {
-      Node &n = pairs.front();
-      res.push_back(*n.pair.large);
-      tmp.push_back(*n.pair.small);
-      pairs.pop_front();
     }
-    while (!tmp.empty()) {
-      Node &n = tmp.back();
-      res.insert(std::lower_bound(res.begin(), res.end(), n), n);
-      tmp.pop_back();
+    bool isLess = *pre < *it;
+    large.push_back(isLess ? &*it : &*pre);
+    small.push_back(isLess ? &*pre : &*it);
+    large.back().push(&small.back());
+  }
+  sort(large);
+  std::list<Node<Type> > tmp;
+  {
+    typename std::list<Node<Type> >::iterator it = large.begin();
+    {
+      tmp.push_back(*it->pop());
+      tmp.push_back(*it);
+      ++it;
+    }
+    for (std::size_t n = 2; it != large.end(); n++) {
+      for (std::size_t j = jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
+        tmp.push_back(*it);
+      for (typename std::list<Node<Type> >::reverse_iterator jt = tmp.rbegin();
+           jt != tmp.rend();) {
+        if (jt->hasPair()) {
+          Node<Type> &node = *jt->pop();
+          ++jt;
+          tmp.insert(std::lower_bound(tmp.begin(), jt.base(), node), node);
+        } else
+          ++jt;
+      }
+    }
+    if (data.size() % 2) {
+      Node<Type> &node = small.back();
+      tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
     }
   }
-  if (data.size() % 2) {
-    Node &n = data.back();
-    res.insert(std::lower_bound(res.begin(), res.end(), n), n);
+  std::list<T> res;
+  for (typename std::list<Node<Type> >::iterator it = tmp.begin();
+       it != tmp.end(); ++it) {
+    T *value;
+    it->getValue(value);
+    res.push_back(*value);
   }
-  data = res;
+  data.swap(res);
 }

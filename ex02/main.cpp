@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:12:44 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/09/30 00:42:48 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:28:05 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,15 @@ def test():
 				stdout=subprocess.PIPE,
 				stderr=subprocess.PIPE,
 			)
-			after_str = result.stdout.decode("ascii").split("\n")[1][7:]
-			after = [int(i) for i in after_str.split(" ")]
-			if after == sorted_numbers:
-				sys.stdout.write("OK")
-			else:
-				sys.stdout.write("NG")
-				return False
+			after_strs = [i[7:] for i in result.stdout.decode("ascii").split("\n") if i.startswith("After:")]
+			for after_str in after_strs:
+				after = [int(i) for i in after_str.split(" ")]
+				if after == sorted_numbers:
+					sys.stdout.write("OK")
+				else:
+					sys.stdout.write("NG")
+					return False
+				sys.stdout.write(" ")
 			sys.stdout.write("\n")
 	return True
 
