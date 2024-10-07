@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 06:12:44 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 15:28:05 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 17:59:56 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
 	You can ask me anything you want, gauge my understanding!
 */
 /*
+#!/usr/bin/env python3
 import random
 import subprocess
 import sys

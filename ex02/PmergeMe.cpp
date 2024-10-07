@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 15:38:04 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/07 17:59:27 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,7 @@ template <typename T> void sort(std::vector<T> &data) {
            jt != tmp.rend();) {
         if (jt->hasPair()) {
           Node<Type> &node = *jt->pop();
-          ++jt;
           tmp.insert(std::lower_bound(tmp.begin(), jt.base(), node), node);
-          --jt;
         } else
           ++jt;
       }
@@ -161,10 +159,9 @@ template <typename T> void sort(std::list<T> &data) {
            jt != tmp.rend();) {
         if (jt->hasPair()) {
           Node<Type> &node = *jt->pop();
-          ++jt;
           tmp.insert(std::lower_bound(tmp.begin(), jt.base(), node), node);
-        } else
-          ++jt;
+        }
+        ++jt;
       }
     }
     if (data.size() % 2) {
