@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/09 01:13:09 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/09 01:30:55 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,72 +178,71 @@ template <typename T> void sort(std::list<T> &data) {
   data.swap(res);
 }
 
-// #include <iostream>
+#include <iostream>
 
-// class Integer {
-// private:
-//   int _value;
+class Integer {
+private:
+  int _value;
 
-// public:
-//   static std::size_t count;
-//   Integer(int value) : _value(value) {};
-//   bool operator<(Integer const &rhs) const {
-//     std::cout << ++count << ": " << _value << " vs " << rhs._value << std::endl;
-//     return _value < rhs._value;
-//   };
-//   friend std::ostream &operator<<(std::ostream &os, Integer const &rhs) {
-//     os << rhs._value;
-//     return os;
-//   };
-// };
+public:
+  static std::size_t count;
+  Integer(int value) : _value(value) {};
+  bool operator<(Integer const &rhs) const {
+    std::cout << ++count << ": " << _value << " vs " << rhs._value << std::endl;
+    return _value < rhs._value;
+  };
+  friend std::ostream &operator<<(std::ostream &os, Integer const &rhs) {
+    os << rhs._value;
+    return os;
+  };
+};
 
-// std::size_t Integer::count = 0;
+std::size_t Integer::count = 0;
 
-// int main() {
-// //   int data[] = {21,1,13,2,17,3,12,4,20,5,15,6,19,7,14,8,18,9,16,10,11};
-//   int data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-//   std::list<Integer> v1(data, data + sizeof(data) / sizeof(data[0]));
-//   Integer::count = 0;
-//   sort(v1);
-//   for (std::list<Integer>::iterator it = v1.begin(); it != v1.end(); ++it)
-//     std::cout << *it << " ";
-//   std::cout << std::endl;
-//   return 0;
-// }
-// /*
-// フォールドジョンソンアルゴリズムは最低の比較回数を実現します。
-// 21の時はどうなるか考えてみましょう。
-// まずペアを作ります
-// a a a a a a a a a a
-// b b b b b b b b b b b
-// この時比較が10回行われます。
-//  a a a a a
-//  b b b b b 
-//  この時比較が5回行われます。
-//   a a
-//   b b b
-//   この時比較が2回行われます。
-//    a
-//    b
-//    この時比較が1回行われます。
-//    挿入を行います
-//    c c
-//   挿入を行います
-//  c c a
-//      b b
-//  比較回数2回の挿入が1回行われます。
-//  余りの挿入が行われます。ceil(log2(4+1))=3回の挿入を行われます。
-// c c a a a a
-//     b b b b 
-// 比較回数2回の挿入が2回行われます。
-// 比較回数3回の挿入が2回行われます。
-// c c a a a a a a a a a
-//     b b b b b b b b b b
-// 比較回数2回の挿入が2回行われます。
-// 比較回数3回の挿入が2回行われます。
-// 比較回数4回の挿入が5回行われます。
-// 余りの挿入が行われます。ceil(log2(20+1))=5回の挿入を行われます。
+int main() {
+//   int data[] = {21,1,13,2,17,3,12,4,20,5,15,6,19,7,14,8,18,9,16,10,11};
+  int data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+  std::list<Integer> v1(data, data + sizeof(data) / sizeof(data[0]));
+  Integer::count = 0;
+  sort(v1);
+  for (std::list<Integer>::iterator it = v1.begin(); it != v1.end(); ++it)
+    std::cout << *it << " ";
+  std::cout << std::endl;
+  return 0;
+}
+/*
+21の時はどうなるか考えてみましょう。
+まずペアを作ります
+a a a a a a a a a a
+b b b b b b b b b b b
+この時比較が10回行われます。
+ a a a a a
+ b b b b b 
+ この時比較が5回行われます。
+  a a
+  b b b
+  この時比較が2回行われます。
+   a
+   b
+   この時比較が1回行われます。
+   挿入を行います
+   c c
+  挿入を行います
+ c c a
+     b|b
+ 比較回数2回の挿入が1回行われます。
+ 余りの挿入が行われます。ceil(log2(4+1))=3回の挿入を行われます。
+c c a a a a
+    b b,b b
+比較回数2回の挿入が2回行われます。
+比較回数3回の挿入が2回行われます。
+c c a a a a a a a a a
+    b b,b b,b b b b b|b
+比較回数2回の挿入が2回行われます。
+比較回数3回の挿入が2回行われます。
+比較回数4回の挿入が5回行われます。
+余りの挿入が行われます。ceil(log2(20+1))=5回の挿入を行われます。
 
-// よって10+5+2+1+2+3+2+2+3+3+2+2+3+3+4+4+4+4+4+5=68
-// の比較が必要になります
-// */
+よって10+5+2+1+2+3+2+2+3+3+2+2+3+3+4+4+4+4+4+5=68
+の比較が必要になります
+*/
