@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/09 01:35:59 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/09 08:46:32 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void PmergeMe(int *data, std::size_t size) {
   printData(data, data + size);
   std::cout << "After:\t";
   printData(v1.begin(), v1.end());
-//   std::cout << "After:\t";
-//   printData(v2.begin(), v2.end());
+  //   std::cout << "After:\t";
+  //   printData(v2.begin(), v2.end());
   std::cout << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::vector : " << middle - start << " us"
@@ -91,15 +91,26 @@ template <typename T> void sort(std::vector<T> &data) {
   std::vector<Node<Type> > tmp;
   tmp.reserve(data.size());
   {
+    bool finished = false;
     typename std::vector<Node<Type> >::iterator it = large.begin();
     {
       tmp.push_back(*it->pop());
       tmp.push_back(*it);
       ++it;
     }
-    for (std::size_t n = 1; it != large.end(); n++) {
-      for (std::size_t j = 2 * jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
+    for (std::size_t n = 1; !finished; n++) {
+      for (std::size_t j = 2 * jacobsthal(n); 0 < j; j--) {
+        if (it == large.end()) {
+          if (data.size() % 2) {
+            Node<Type> &node = small.back();
+            tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
+          }
+          finished = true;
+          break;
+        }
         tmp.push_back(*it);
+        ++it;
+      }
       for (typename std::vector<Node<Type> >::reverse_iterator jt = tmp.rbegin();
            jt != tmp.rend();) {
         if (jt->hasPair()) {
@@ -108,10 +119,6 @@ template <typename T> void sort(std::vector<T> &data) {
         } else
           ++jt;
       }
-    }
-    if (data.size() % 2) {
-      Node<Type> &node = small.back();
-      tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
     }
   }
   std::vector<T> res;
@@ -145,15 +152,26 @@ template <typename T> void sort(std::list<T> &data) {
   sort(large);
   std::list<Node<Type> > tmp;
   {
+    bool finished = false;
     typename std::list<Node<Type> >::iterator it = large.begin();
     {
       tmp.push_back(*it->pop());
       tmp.push_back(*it);
       ++it;
     }
-    for (std::size_t n = 1; it != large.end(); n++) {
-      for (std::size_t j = 2 * jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
+    for (std::size_t n = 1; !finished; n++) {
+      for (std::size_t j = 2 * jacobsthal(n); 0 < j; j--) {
+        if (it == large.end()) {
+          if (data.size() % 2) {
+            Node<Type> &node = small.back();
+            tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
+          }
+          finished = true;
+          break;
+        }
         tmp.push_back(*it);
+        ++it;
+      }
       for (typename std::list<Node<Type> >::reverse_iterator jt = tmp.rbegin();
            jt != tmp.rend();) {
         if (jt->hasPair()) {
@@ -162,10 +180,6 @@ template <typename T> void sort(std::list<T> &data) {
         }
         ++jt;
       }
-    }
-    if (data.size() % 2) {
-      Node<Type> &node = small.back();
-      tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
     }
   }
   std::list<T> res;
@@ -200,11 +214,11 @@ template <typename T> void sort(std::list<T> &data) {
 // std::size_t Integer::count = 0;
 
 // int main() {
-//   int data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-//   std::list<Integer> v1(data, data + sizeof(data) / sizeof(data[0]));
+//   int data[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+//   std::vector<Integer> v1(data, data + sizeof(data) / sizeof(data[0]));
 //   Integer::count = 0;
 //   sort(v1);
-//   for (std::list<Integer>::iterator it = v1.begin(); it != v1.end(); ++it)
+//   for (std::vector<Integer>::iterator it = v1.begin(); it != v1.end(); ++it)
 //     std::cout << *it << " ";
 //   std::cout << std::endl;
 //   return 0;
@@ -216,7 +230,7 @@ template <typename T> void sort(std::list<T> &data) {
 // b b b b b b b b b b b
 // この時比較が10回行われます。
 //  a a a a a
-//  b b b b b 
+//  b b b b b
 //  この時比較が5回行われます。
 //   a a
 //   b b b
