@@ -6,13 +6,14 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 04:52:53 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/07 21:42:32 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:06:00 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cerrno>
 #include <cstdlib>
 #include <istream>
+#include <limits>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -46,31 +47,60 @@ long ft_stol(const std::string &str) {
   return ret;
 }
 
-#define CALCULATE(s, op)                                                       \
-  do {                                                                         \
-    if (s.empty())                                                             \
-      throw std::invalid_argument("invalid argument");                         \
-    long a = s.top();                                                          \
-    s.pop();                                                                   \
-    if (s.empty())                                                             \
-      throw std::invalid_argument("invalid argument");                         \
-    long b = s.top();                                                          \
-    s.pop();                                                                   \
-    s.push(b op a);                                                            \
-  } while (0);
+template <typename T, typename F>
+static void calculate(std::stack<T> &stack, F op) {
+  if (stack.empty())
+    throw std::invalid_argument("invalid argument");
+  T b = stack.top();
+  stack.pop();
+  if (stack.empty())
+    throw std::invalid_argument("invalid argument");
+  T a = stack.top();
+  stack.pop();
+  stack.push(op(a, b));
+}
+
+static long plus(long const &a, long const &b) {
+  long c;
+  if (__builtin_add_overflow(a, b, &c))
+    throw std::overflow_error("overflow");
+  return c;
+}
+
+static long minus(long const &a, long const &b) {
+  long c;
+  if (__builtin_sub_overflow(a, b, &c))
+    throw std::overflow_error("overflow");
+  return c;
+}
+
+static long multiplies(long const &a, long const &b) {
+  long c;
+  if (__builtin_mul_overflow(a, b, &c))
+    throw std::overflow_error("overflow");
+  return c;
+}
+
+static long divides(long const &a, long const &b) {
+  if (b == 0)
+    throw std::invalid_argument("invalid argument");
+  if (a == std::numeric_limits<long>::min() && b == -1)
+    throw std::overflow_error("overflow");
+  return a / b;
+}
 
 long rpn(std::istream &in) {
   std::stack<long> stack;
   std::string tmp;
   while (getToken(in, tmp)) {
     if (tmp == "+")
-      CALCULATE(stack, +)
+      calculate(stack, plus);
     else if (tmp == "-")
-      CALCULATE(stack, -)
+      calculate(stack, minus);
     else if (tmp == "*")
-      CALCULATE(stack, *)
+      calculate(stack, multiplies);
     else if (tmp == "/")
-      CALCULATE(stack, /)
+      calculate(stack, divides);
     else
       stack.push(ft_stol(tmp));
   }
