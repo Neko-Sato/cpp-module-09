@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/08 21:29:31 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/08 22:12:19 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ template <typename T> void sort(std::vector<T> &data) {
       tmp.push_back(*it);
       ++it;
     }
-    for (std::size_t n = 2; it != large.end(); n++) {
-      for (std::size_t j = jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
+    for (std::size_t n = 1; it != large.end(); n++) {
+      for (std::size_t j = 2 * jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
         tmp.push_back(*it);
       for (typename std::vector<Node<Type> >::reverse_iterator jt = tmp.rbegin();
            jt != tmp.rend();) {
@@ -149,14 +149,14 @@ template <typename T> void sort(std::list<T> &data) {
       tmp.push_back(*it);
       ++it;
     }
-    for (std::size_t n = 2; it != large.end(); n++) {
-      for (std::size_t j = jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
+    for (std::size_t n = 1; it != large.end(); n++) {
+      for (std::size_t j = 2 * jacobsthal(n); 0 < j && it != large.end(); --j, ++it)
         tmp.push_back(*it);
       for (typename std::list<Node<Type> >::reverse_iterator jt = tmp.rbegin();
            jt != tmp.rend();) {
         if (jt->hasPair()) {
           Node<Type> &node = *jt->pop();
-          tmp.insert(std::lower_bound(tmp.begin(), jt.base(), node), node);
+          tmp.insert(std::lower_bound(tmp.begin(), --jt.base(), node), node);
         }
         ++jt;
       }
@@ -201,5 +201,8 @@ template <typename T> void sort(std::list<T> &data) {
 //   int data[] = {21,1,13,2,17,3,12,4,20,5,15,6,19,7,14,8,18,9,16,10,11};
 //   std::vector<Integer> v1(data, data + sizeof(data) / sizeof(data[0]));
 //   sort(v1);
+//   for (std::vector<Integer>::iterator it = v1.begin(); it != v1.end(); ++it)
+//     std::cout << *it << " ";
+//   std::cout << std::endl;
 //   return 0;
 // }
