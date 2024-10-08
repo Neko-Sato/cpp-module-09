@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 06:30:23 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/10/09 01:00:30 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/09 01:13:09 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void PmergeMe(int *data, std::size_t size) {
   printData(data, data + size);
   std::cout << "After:\t";
   printData(v1.begin(), v1.end());
+//   std::cout << "After:\t";
+//   printData(v2.begin(), v2.end());
   std::cout << "Time to process a range of " << std::setw(3)
             << std::setfill(' ') << size
             << " elements with std::vector : " << middle - start << " us"
@@ -85,7 +87,6 @@ template <typename T> void sort(std::vector<T> &data) {
     small.push_back(isLess ? &*pre : &*it);
     large.back().push(&small.back());
   }
-std::cout << std::endl;//
   sort(large);
   std::vector<Node<Type> > tmp;
   tmp.reserve(data.size());
@@ -103,12 +104,6 @@ std::cout << std::endl;//
            jt != tmp.rend();) {
         if (jt->hasPair()) {
           Node<Type> &node = *jt->pop();
-for (typename std::vector<Node<Type> >::iterator kt = tmp.begin(); kt != tmp.end(); ++kt)
-  std::cout << kt->getTypical() << " ";
-std::cout << std::endl;//
-for (typename std::vector<Node<Type> >::iterator kt = tmp.begin(); kt != --jt.base(); ++kt)
-  std::cout << kt->getTypical() << " ";
-std::cout << std::endl;//
           tmp.insert(std::lower_bound(tmp.begin(), --jt.base(), node), node);
         } else
           ++jt;
@@ -116,9 +111,6 @@ std::cout << std::endl;//
     }
     if (data.size() % 2) {
       Node<Type> &node = small.back();
-for (typename std::vector<Node<Type> >::iterator kt = tmp.begin(); kt != tmp.end(); ++kt)
-  std::cout << kt->getTypical() << " ";
-std::cout << std::endl;//
       tmp.insert(std::lower_bound(tmp.begin(), tmp.end(), node), node);
     }
   }
@@ -131,7 +123,6 @@ std::cout << std::endl;//
     res.push_back(*value);
   }
   data.swap(res);
-std::cout << std::endl;//
 }
 
 template <typename T> void sort(std::list<T> &data) {
@@ -209,6 +200,7 @@ template <typename T> void sort(std::list<T> &data) {
 // std::size_t Integer::count = 0;
 
 // int main() {
+// //   int data[] = {21,1,13,2,17,3,12,4,20,5,15,6,19,7,14,8,18,9,16,10,11};
 //   int data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 //   std::list<Integer> v1(data, data + sizeof(data) / sizeof(data[0]));
 //   Integer::count = 0;
