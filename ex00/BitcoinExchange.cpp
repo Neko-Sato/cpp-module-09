@@ -6,7 +6,7 @@
 /*   By: hshimizu <hshimizu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 15:03:58 by hshimizu          #+#    #+#             */
-/*   Updated: 2024/08/27 04:44:32 by hshimizu         ###   ########.fr       */
+/*   Updated: 2024/10/11 02:23:54 by hshimizu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <stdexcept>
 
 static time_t strtotime(std::string const &str) {
-  std::tm tm;
+  std::tm tm = {};
   if (!strptime(str.c_str(), "%Y-%m-%d", &tm))
     throw std::invalid_argument("strptime failed");
   return std::mktime(&tm);
